@@ -9,8 +9,10 @@ text_option::text_option(
 	const sf::Color & fillcolor,
 	const sf::Color & outlinecolor
 ) :
-	sf::Text(string, font),
+	//menu_option(string, font),
 	on_activation(on_activation){
+	setString(string);
+	setFont(font);
 	setCharacterSize(charactersize);
 	setFillColor(fillcolor);
 	setOutlineColor(outlinecolor);
@@ -27,10 +29,10 @@ text_option::text_option(
 	);
 }
 
-void text_option::drawselection(sf::RenderWindow & window){
+void text_option::draw_selection(sf::RenderWindow & window) {
 	window.draw(indicator);
 }
 
-void text_option::activate(){
+void text_option::activate() {
 	on_activation();
 }

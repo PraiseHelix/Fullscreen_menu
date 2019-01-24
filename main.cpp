@@ -1,16 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "text_option.hpp"
-#include <array>
 #include <string>
-#include <functional>
-#include <vector>
-#include <list>
 #include "Menu_screen.hpp"
 
-
-//TODO: menu handler. nodig voor het kunnen scrollen.
-//TODO: smart pointers?
 int main(){
 	int windowwidth = 800;
 	int windowheight = 600;
@@ -25,14 +18,14 @@ int main(){
 	
 	menu_screen start_screen(std::string("Pocket-Animals"), Titlefont, windowwidth, windowheight);
 	menu_screen settings_screen(std::string("Settings"), Titlefont, windowwidth, windowheight);
-	menu_screen controls_screen(std::string("Controls"), Titlefont, windowwidth, windowheight);
+	//menu_screen controls_screen(std::string("Controls"), Titlefont, windowwidth, windowheight);
 	menu_screen* current_screen = &start_screen;
 
 	//Title screen
-	text_option newgame("New Game", sf::Vector2f(float(windowwidth / 2), 200), []() {std::cout << "New_game_event";}, 30, Titlefont, sf::Color::Yellow, sf::Color::Blue);
-	text_option loadgame("Load Game", sf::Vector2f(float(windowwidth / 2), 300), []() {std::cout << "Load_game_event"; }, 30, Titlefont);
-	text_option settings("Settings", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen, &settings_screen]() {std::cout << "Settings_event"; current_screen = &settings_screen; }, 30, Titlefont);
-	text_option quit("Quit", sf::Vector2f(float(windowwidth / 2), 500), [&window]() {std::cout << "Quit_event"; window.close(); }, 30, Titlefont);
+	auto newgame = std::make_shared<text_option>("New Game", sf::Vector2f(float(windowwidth / 2), 200), []() {std::cout << "New_game_event";}, 30, Titlefont, sf::Color::Yellow, sf::Color::Blue);
+	auto loadgame = std::make_shared<text_option>("Load Game", sf::Vector2f(float(windowwidth / 2), 300), []() {std::cout << "Load_game_event"; }, 30, Titlefont);
+	auto settings = std::make_shared<text_option>("Settings", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen, &settings_screen]() {std::cout << "Settings_event"; current_screen = &settings_screen; }, 30, Titlefont);
+	auto quit = std::make_shared<text_option>("Quit", sf::Vector2f(float(windowwidth / 2), 500), [&window]() {std::cout << "Quit_event"; window.close(); }, 30, Titlefont);
 
 	start_screen.add(newgame);
 	start_screen.add(loadgame);
@@ -40,20 +33,19 @@ int main(){
 	start_screen.add(quit);
 	
 	//Settings screen
-	text_option settings_back("Back", sf::Vector2f(float(windowwidth / 2), 500), [&current_screen, &start_screen]() {current_screen = &start_screen; }, 30, Titlefont);
-	text_option text_framerate("Framerate Limit	" + std::to_string(frameratelimit), sf::Vector2f(float(windowwidth / 2), 200),
-		[&frameratelimit]() {/*TODO: framerate kunnen instellen. nog geen idee hoe set string kan ik niet zo gebruiken get set functie maken in*/ }, 30, Titlefont);
-	text_option controls_option("Controls", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen, &controls_screen]() {current_screen = &controls_screen; }, 30, Titlefont);
-	
+	auto settings_back = std::make_shared<text_option>("Back", sf::Vector2f(float(windowwidth / 2), 500), [&current_screen, &start_screen]() {current_screen = &start_screen; }, 30, Titlefont);
+	auto text_framerate = std::make_shared<framerate_option>("Framerate Limit	" + std::to_string(frameratelimit), sf::Vector2f(float(windowwidth / 2), 200), 30, Titlefont);
+	auto controls_option = std::make_shared<text_option>("Controls", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen]() {/*current_screen = &controls_screen;*/ }, 30, Titlefont);
+
 	settings_screen.add(settings_back);
 	settings_screen.add(text_framerate);
 	settings_screen.add(controls_option);
 
-	//Controls Screen
-	text_option left_setting("Left", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
-	text_option right_setting("Right", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
-	text_option up_setting("Up", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
-	text_option down_setting("Down", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
+	////Controls Screen
+	//text_option left_setting("Left", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
+	//text_option right_setting("Right", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
+	//text_option up_setting("Up", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
+	//text_option down_setting("Down", sf::Vector2f(float(windowwidth / 3), 200), []() {}, 30, Titlefont);
 
 	while (window.isOpen()) {
 		window.clear();
@@ -72,11 +64,22 @@ int main(){
 				window.close();
 			}
 			if (event.type == sf::Event::TextEntered) {
-				std::cout << "tekst";
+				
 			}
 			if (event.type == sf::Event::MouseButtonPressed) {
 				current_screen->activate_selected();
-			}			
+			}		
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Up) {
+					current_screen->scroll_down();
+				}
+				else if (event.key.code == sf::Keyboard::Down) {
+					current_screen->scroll_up();
+				}
+				else if (event.key.code == sf::Keyboard::Enter) {
+					current_screen->activate_selected();
+				}
+			}
 		}
 	}
 	return 0;

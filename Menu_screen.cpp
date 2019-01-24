@@ -12,34 +12,38 @@ menu_screen::menu_screen(const std::string & text, const sf::Font & font, int wi
 	title.setPosition(sf::Vector2f(float(windowwidth / 2), float(windowheight / 6)));
 }
 
-void menu_screen::add(text_option & option) {
-	options.push_back(option);
-	if (options.size() == 1) {
-		selected_option = options[0];
-	}
-}
-
 void menu_screen::draw(sf::RenderWindow & window) {
 	window.draw(title);
 	for (auto & option : options) {
-		window.draw(option);
+		window.draw(*option);
 	}
-	selected_option.drawselection(window);
+	options[selected_option_index]->draw_selection(window);
 }
 
 void menu_screen::update(sf::RenderWindow & window) {
-	//TODO: niet efficent? kan ook in draw functie
-	for (auto & option : options) {
-		if (option.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window)))) {
-			selected_option = option;
+	for(unsigned int i = 0; i < options.size(); i++){
+		if (options[i]->getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window)))) {
+			selected_option_index = i;
+			break;
 		}
 	}
 }
 
 void menu_screen::activate_selected() {
-	selected_option.activate();
+	options[selected_option_index]->activate();
 }
 
 void menu_screen::scroll_down() {
+	if (selected_option_index == 0) {
+		selected_option_index = options.size() - 1;
+		return;
+	}
+	selected_option_index--;
+}
 
+void menu_screen::scroll_up() {
+	if (++selected_option_index < options.size()) {
+		return;
+	}
+	selected_option_index = 0;
 }

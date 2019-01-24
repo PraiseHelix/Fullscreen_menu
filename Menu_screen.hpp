@@ -8,15 +8,23 @@
 
 class menu_screen {
 	sf::Text title;
-	std::vector<text_option> options;
-	text_option selected_option; //TODO: smart pointers?
+	std::vector<std::shared_ptr<menu_option>> options;
+	unsigned int selected_option_index;
 public:
 	menu_screen(const std::string & text, const sf::Font & font, int windowwidth, int windowheight);
-	void add(text_option & option);
 	void draw(sf::RenderWindow & window);
 	void update(sf::RenderWindow & window);
 	void activate_selected();
 	void scroll_down();
+	void scroll_up();
+
+	template<typename T>
+	void add(std::shared_ptr<T> & option) {
+		options.push_back(option);
+		if (options.size() == 1) {
+			selected_option_index = 0;
+		}
+	}
 };
 
 
