@@ -34,8 +34,10 @@ int main(){
 	
 	//Settings screen
 	auto settings_back = std::make_shared<text_option>("Back", sf::Vector2f(float(windowwidth / 2), 500), [&current_screen, &start_screen]() {current_screen = &start_screen; }, 30, Titlefont);
-	auto text_framerate = std::make_shared<framerate_option>("Framerate Limit	" + std::to_string(frameratelimit), sf::Vector2f(float(windowwidth / 2), 200), 30, Titlefont);
+	auto text_framerate = std::make_shared<text_option>("Framerate Limit	" + std::to_string(frameratelimit), sf::Vector2f(float(windowwidth / 2), 200), []() {}, 30, Titlefont);
 	auto controls_option = std::make_shared<text_option>("Controls", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen]() {/*current_screen = &controls_screen;*/ }, 30, Titlefont);
+
+	text_framerate->set_lambda([&text_framerate]() {text_framerate->setString("nieuwe string"); });
 
 	settings_screen.add(settings_back);
 	settings_screen.add(text_framerate);

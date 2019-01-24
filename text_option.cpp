@@ -9,10 +9,8 @@ text_option::text_option(
 	const sf::Color & fillcolor,
 	const sf::Color & outlinecolor
 ) :
-	//menu_option(string, font),
+	sf::Text(string, font),
 	on_activation(on_activation){
-	setString(string);
-	setFont(font);
 	setCharacterSize(charactersize);
 	setFillColor(fillcolor);
 	setOutlineColor(outlinecolor);
