@@ -1,15 +1,15 @@
 #include "Menu_screen.hpp"
 
 menu_screen::menu_screen(const std::string & text, const sf::Font & font, int windowwidth, int windowheight) :
-	title(text, font),
 	selected_option_index(0){
-	//title_settings
+	title.setCharacterSize(50);
+	title.setString(text);
+	title.setFont(font);
 	title.setFillColor(sf::Color::Yellow);
 	title.setOutlineColor(sf::Color::Blue);
 	title.setOutlineThickness(3);
-	title.setCharacterSize(50);
-	title.setOrigin(title.getGlobalBounds().width / 2, title.getGlobalBounds().height / 2);
-	title.setPosition(sf::Vector2f(float(windowwidth / 2), float(windowheight / 6)));
+	title.setOrigin(title.getGlobalBounds().width/2, title.getGlobalBounds().height / 2);
+	title.setPosition(float(windowwidth / 2), float(windowheight / 5));
 }
 
 void menu_screen::draw(sf::RenderWindow & window) {

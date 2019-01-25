@@ -12,7 +12,6 @@ public:
 	std::function< void() > on_activation;
 	sf::RectangleShape indicator;
 public:
-//	text_option() {};
 
 	text_option(
 		const std::string & string,

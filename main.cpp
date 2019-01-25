@@ -11,7 +11,7 @@ int main(){
 
 	sf::RenderWindow window(sf::VideoMode(windowwidth, windowheight), "Main_Window");
 	window.setFramerateLimit(frameratelimit);
-
+	
 	
 	sf::Font Titlefont;
 	Titlefont.loadFromFile("Pokemon Solid.ttf");
@@ -24,7 +24,7 @@ int main(){
 	//Title screen
 	auto newgame = std::make_shared<text_option>("New Game", sf::Vector2f(float(windowwidth / 2), 200), []() {std::cout << "New_game_event";}, 30, Titlefont, sf::Color::Yellow, sf::Color::Blue);
 	auto loadgame = std::make_shared<text_option>("Load Game", sf::Vector2f(float(windowwidth / 2), 300), []() {std::cout << "Load_game_event"; }, 30, Titlefont);
-	auto settings = std::make_shared<text_option>("Settings", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen, &settings_screen]() {std::cout << "Settings_event"; current_screen = &settings_screen; }, 30, Titlefont);
+	auto settings = std::make_shared<text_option>("Settings", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen, &settings_screen]() {current_screen = &settings_screen; }, 30, Titlefont);
 	auto quit = std::make_shared<text_option>("Quit", sf::Vector2f(float(windowwidth / 2), 500), [&window]() {std::cout << "Quit_event"; window.close(); }, 30, Titlefont);
 
 	start_screen.add(newgame);
@@ -37,7 +37,33 @@ int main(){
 	auto text_framerate = std::make_shared<text_option>("Framerate Limit	" + std::to_string(frameratelimit), sf::Vector2f(float(windowwidth / 2), 200), []() {}, 30, Titlefont);
 	auto controls_option = std::make_shared<text_option>("Controls", sf::Vector2f(float(windowwidth / 2), 400), [&current_screen]() {/*current_screen = &controls_screen;*/ }, 30, Titlefont);
 
-	text_framerate->set_lambda([&text_framerate]() {text_framerate->setString("nieuwe string"); });
+	//de framerate aanpassen lambda
+	text_framerate->set_lambda([&]() {
+		text_framerate->setString("Framerate Limit	__");
+
+		sf::Event inputevent;
+		std::string newframerate;
+		while (window.waitEvent(inputevent)) {
+			window.clear();
+			current_screen->draw(window);
+			window.display();
+
+			if (inputevent.type == sf::Event::TextEntered) {
+				if (inputevent.text.unicode >= '0' && inputevent.text.unicode <= '9') {
+					newframerate += inputevent.text.unicode;
+					if (newframerate.size() == 1) {
+						text_framerate->setString("Framerate Limit	" + newframerate + "_");
+					}
+					else {
+						text_framerate->setString("Framerate Limit	" + newframerate);
+						break;
+					}
+				}
+			}
+		}
+		frameratelimit = std::stoi(newframerate);
+		window.setFramerateLimit(frameratelimit);
+	});
 
 	settings_screen.add(settings_back);
 	settings_screen.add(text_framerate);
