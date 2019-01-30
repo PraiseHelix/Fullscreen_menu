@@ -17,6 +17,7 @@ public:
 	void on_update() {
 		for (unsigned int i = 0; i < options.size(); i++) {
 			options[i]->remove_selection();
+			options[i]->update();
 			if (options[i]->getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window)))) {
 				selected_index = i;
 			}
@@ -28,12 +29,13 @@ public:
 	void on_draw() {
 		window.draw(title);
 		for (auto & option : options) {
-			window.draw(*option);
+			//window.draw(*option);
+			option->draw(window);
 		}
 	}
 
 	//activates the selected option
-	void on_activate() {
+	void on_activate() { 
 		options[selected_index]->activate();
 	}
 

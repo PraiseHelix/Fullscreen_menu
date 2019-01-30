@@ -179,19 +179,12 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Button.hpp" />
-    <ClInclude Include="ButtonList.hpp" />
-    <ClInclude Include="ButtonListener.hpp" />
-    <ClInclude Include="ButtonVisualisation.hpp" />
     <ClInclude Include="generic_option.hpp" />
     <ClInclude Include="listener_dummy.hpp" />
     <ClInclude Include="menu_screen.hpp" />
     <ClInclude Include="option_listener.hpp" />
+    <ClInclude Include="settings.hpp" />
     <ClInclude Include="Title_screen.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Button_pressed.png" />
-    <Image Include="Button_released.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

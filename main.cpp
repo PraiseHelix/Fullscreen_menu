@@ -5,6 +5,7 @@
 #include "menu_screen.hpp"
 #include "listener_dummy.hpp"
 #include "Title_screen.hpp"
+#include "settings.hpp"
 
 
 int main(){
@@ -15,11 +16,17 @@ int main(){
 	sf::RenderWindow window(sf::VideoMode(windowwidth, windowheight), "Main_Window");
 	window.setFramerateLimit(frameratelimit);
 
-	listener_dummy listener;
+	std::shared_ptr<g_settings> settings(new g_settings);
+	//auto settings = std::make_shared<g_settings>;
 
-	title_screen title(window,&listener);
+	std::shared_ptr<listener_dummy> listener(new listener_dummy);
+	//listener_dummy listener;
 
-	menu_screen * current_screen = &title;
+	title_screen title(window,listener);
+
+	settings_screen settings_screen(window, listener, settings);
+
+	menu_screen * current_screen = &settings_screen;
 
 	while (window.isOpen()) {
 

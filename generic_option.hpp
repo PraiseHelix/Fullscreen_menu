@@ -2,18 +2,22 @@
 
 #include<SFML/Graphics.hpp>
 #include"option_listener.hpp"
+#include <functional>
+#include <string>
 
 
 class generic_option : public sf::Text{
 private:
-	option_listener * listener;
+	std::shared_ptr<option_listener> listener;
+	std::function<void(void)> activation_function = nullptr;
+	//std::string to_listener;
 
 public:
 	generic_option(
 		const std::string & string,
 		const sf::Font & font,
 		const sf::Vector2f & position,
-		option_listener * first_listener = nullptr
+		std::shared_ptr<option_listener> first_listener = nullptr
 	)
 		: sf::Text(string, font),
 		listener(first_listener)
@@ -25,8 +29,24 @@ public:
 		setOutlineColor(sf::Color::Blue);
 	}
 
-	//void set_listener(option_listener * new_listener) { listener = new_listener; }
-	void activate() { listener->is_pressed(getString()); }
+	void draw(sf::RenderWindow & window) {
+		window.draw(*this);
+	}
+
+	void update() {}
+
+	void set_listener(std::shared_ptr<option_listener> new_listener) { listener = new_listener; }
+
+	void set_activation_function(std::function<void(void)> function) {
+		activation_function = function;
+	}
+
+	void activate() { 
+		listener->is_pressed("lol");
+		if (activation_function != nullptr) {
+			activation_function();
+		}
+	}
 
 	void set_selection() {
 		setOutlineThickness(3);
