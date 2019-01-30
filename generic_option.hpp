@@ -42,7 +42,7 @@ public:
 	}
 
 	void activate() { 
-		listener->is_pressed("lol");
+		listener->is_pressed("listener message");
 		if (activation_function != nullptr) {
 			activation_function();
 		}
