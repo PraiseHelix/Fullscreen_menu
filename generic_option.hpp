@@ -5,9 +5,10 @@
 #include <functional>
 #include <string>
 
-
-class generic_option : public sf::Text {
+class generic_option {
 private:
+	sf::Text text;
+	sf::Sprite button;
 	std::shared_ptr<option_listener> listener;
 	std::function<void(void)> activation_function = nullptr;
 	//std::string to_listener;
@@ -19,14 +20,23 @@ public:
 		const sf::Vector2f & position,
 		std::shared_ptr<option_listener> first_listener = nullptr
 	)
-		: sf::Text(string, font),
+		: text(string, font),
 		listener(first_listener)
 	{
-		auto tmp = getGlobalBounds();
-		setOrigin((tmp.width / 2) + tmp.left, (tmp.height / 2) + tmp.top);
-		setPosition(position);
-		setFillColor(sf::Color::Yellow);
-		setOutlineColor(sf::Color::Blue);
+		auto tmp = text.getGlobalBounds();
+		text.setOrigin((tmp.width / 2) + tmp.left, (tmp.height / 2) + tmp.top);
+		text.setPosition(position);
+		text.setFillColor(sf::Color::Yellow);
+		text.setOutlineColor(sf::Color::Blue);
+		text.setOutlineThickness(3);
+
+		//button
+		auto texture(new sf::Texture);
+		texture->loadFromFile("menuButton.png");
+		button.setTexture(*texture);
+		button.setOrigin((button.getGlobalBounds().width / 2) + button.getGlobalBounds().left, (button.getGlobalBounds().height / 2) + button.getGlobalBounds().top);
+		button.setPosition(text.getPosition());
+		button.setScale(float(0.4), float(0.3));
 	}
 
 	void onCall() {};
@@ -37,7 +47,16 @@ public:
 
 
 	void draw(sf::RenderWindow & window) {
-		window.draw(*this);
+		window.draw(button);
+		window.draw(text);
+	}
+
+	sf::Rect<float> getGlobalBounds() {
+		return button.getGlobalBounds();
+	}
+
+	void setString(std::string string) {
+		text.setString(string);
 	}
 
 	void set_listener(std::shared_ptr<option_listener> new_listener) { listener = new_listener; }
@@ -47,17 +66,17 @@ public:
 	}
 
 	void activate() { 
-		listener->is_pressed("listener indicator");
-		if (activation_function != nullptr) {
+		//listener->is_pressed("listener indicator");
+		if (activation_function) {
 			activation_function();
 		}
 	}
 
 	void set_selection() {
-		setOutlineThickness(3);
+		text.setOutlineColor(sf::Color::Red);
 	}
 
 	void remove_selection() {
-		setOutlineThickness(0);
+		text.setOutlineColor(sf::Color::Blue);
 	}
 };
