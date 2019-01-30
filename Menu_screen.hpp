@@ -3,15 +3,26 @@
 #include "SFML/Graphics.hpp"
 
 class menu_screen {
-protected:
+private:
 	sf::RenderWindow & window;
 	sf::Text title;
-	sf::Font font;
 	std::vector<std::shared_ptr<generic_option>> options;
 	unsigned int selected_index = 0;
 public:
 
-	menu_screen(sf::RenderWindow & window): window(window) {}
+	menu_screen(sf::RenderWindow & window, const std::string & title_text, const sf::Font & font): window(window), options(options) {
+		auto tmp_size = window.getSize();
+
+		title.setString(title_text);
+		title.setFont(font);
+		title.setOrigin((title.getGlobalBounds().width / 2) + title.getGlobalBounds().left, (title.getGlobalBounds().height / 2) + title.getGlobalBounds().top);
+		title.setPosition(float(tmp_size.x / 2), 100);
+		title.setFillColor(sf::Color::Green);
+	}
+
+	void push_back(std::shared_ptr<generic_option> option) {
+		options.push_back(option);
+	}
 
 	//check's if mouse is over an option. if true, option is selected.
 	void on_update() {

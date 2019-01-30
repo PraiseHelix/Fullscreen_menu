@@ -6,7 +6,7 @@
 #include <string>
 
 
-class generic_option : public sf::Text{
+class generic_option : public sf::Text {
 private:
 	std::shared_ptr<option_listener> listener;
 	std::function<void(void)> activation_function = nullptr;
@@ -29,11 +29,16 @@ public:
 		setOutlineColor(sf::Color::Blue);
 	}
 
+	void onCall() {};
+	void onStart() {};
+	void onCollistion() {};
+	void onInteract() {};
+	void update() {};
+
+
 	void draw(sf::RenderWindow & window) {
 		window.draw(*this);
 	}
-
-	void update() {}
 
 	void set_listener(std::shared_ptr<option_listener> new_listener) { listener = new_listener; }
 
@@ -42,7 +47,7 @@ public:
 	}
 
 	void activate() { 
-		listener->is_pressed("listener message");
+		listener->is_pressed("listener indicator");
 		if (activation_function != nullptr) {
 			activation_function();
 		}
